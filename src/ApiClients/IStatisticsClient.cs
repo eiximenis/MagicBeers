@@ -13,5 +13,9 @@ namespace ApiClients
         Task AddLose(string player);
         Task AddWin(string player);
 
+        Task AddCardUsed(string player, int cardId);
+
+        Task<IEnumerable<CardUsage>> GetCardUsages(string player);
+
     }
 }

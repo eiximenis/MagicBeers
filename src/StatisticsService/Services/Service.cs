@@ -69,6 +69,22 @@ namespace StatisticsService
             };
         }
 
+        public override async Task<CardsUsageResponse> GetCardsUsages(PlayerRequest request, ServerCallContext context)
+        {
+            var player = request.PlayerName;
+            var data = await _db.CardUsages.Where(cu => cu.Player == player)
+                .OrderByDescending(c => c.Count).Take(10).ToListAsync();
+
+            var response = new CardsUsageResponse() { Count = data.Count };
+            response.Items.AddRange(data.Select(i => new CardsUsageReponseItem()
+            {
+                CardId = i.CardId,
+                Counts = i.Count,
+                PlayerName = i.Player
+            }));
+
+            return response;
+        }
 
         public override async Task<EmptyResponse> AddLose(PlayerRequest request, ServerCallContext context)
         {

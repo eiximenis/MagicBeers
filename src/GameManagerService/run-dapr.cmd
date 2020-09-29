@@ -1,0 +1,1 @@
+dapr run --app-id gamemanager --app-port 5002 --dapr-http-port 3502 dotnet run

@@ -5,6 +5,10 @@
 #    https://aka.ms/AA7q20u
 #
 name: magicbeers
+extensions:
+- name: dapr
+  log-level: debug
+  components-path: ./dapr-components
 services:
 - name: webclient
   project: WebClient/WebClient.csproj
@@ -22,4 +26,13 @@ services:
       value: "Y"
     - name: SA_PASSWORD
       value: "Pass@word1" 
+
+ingress:
+  - name: web-ingress
+    bindings:
+      - port: 80
+        protocol: http
+    rules:
+      - path: /
+        service: webclient
     

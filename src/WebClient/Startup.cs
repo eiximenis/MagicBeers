@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using ApiClients;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -12,6 +13,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using WebClient.Data;
 
 namespace WebClient
@@ -32,16 +34,25 @@ namespace WebClient
             services.AddRazorPages();
             services.AddHttpContextAccessor();
             services.AddServerSideBlazor();
+            services.AddHttpClient("dapr", c =>
+            {
+                var uri = Configuration.GetServiceUri("WebClient-dapr", "http") ??
+                    new Uri(string.Format("{0}:{1}", Configuration["dapr:url"], Configuration["dapr:port"]));
+
+                c.BaseAddress = uri;
+            });
             services.AddTransient<IGameManagerClient>(sp =>
             {
-                var uri = Configuration.GetServiceUri("gamemanagerservice", "https" )?.AbsoluteUri ?? Configuration["Manager:url"];
+                var uri = Configuration.GetServiceUri("gamemanagerservice", "https")?.AbsoluteUri ?? Configuration["Manager:url"];
                 return new GameManagerClient(uri);
             });
 
             services.AddTransient<IStatisticsClient>(sp =>
             {
                 var uri = Configuration.GetServiceUri("statisticsservice", "https")?.AbsoluteUri ?? Configuration["Statistics:url"];
-                return new StatisticsClient(uri);
+                var logger = sp.GetRequiredService<ILogger<IStatisticsClient>>();
+                var client = sp.GetRequiredService<IHttpClientFactory>().CreateClient("dapr");
+                return new StatisticsClient(uri, client, logger);
             });
 
             services.AddAuthentication(opt =>

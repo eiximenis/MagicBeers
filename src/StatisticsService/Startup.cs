@@ -40,6 +40,7 @@ namespace StatisticsService
                     options.UseSqlServer(constrHelper.ConnectionString); 
                 }
             );
+            services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,16 +51,14 @@ namespace StatisticsService
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCloudEvents();
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGrpcService<StatisticsService.Service>();
-
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
-                });
+                endpoints.MapSubscribeHandler();
+                endpoints.MapControllers();
             });
         }
     }

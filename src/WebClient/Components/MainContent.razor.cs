@@ -41,12 +41,18 @@ namespace WebClient.Components
             ChangesRemaining = 2;
             RivalHand = Enumerable.Range(1, 4).Select(x => CardsRepository.EmptyCard());
             _cards = (await GameManagerClient.GetInitialCards(PlayerName, "not@used.com")).ToArray();
+
+            foreach (var card in _cards)
+            {
+                await StatsClient.AddCardUsed(PlayerName, card.Id);
+            }
         }
 
         protected async Task ChangeCard(int idx)
         {
             var card = await GameManagerClient.GetNewCard(PlayerName, "not@used.com");
             _cards[idx] = card;
+            await StatsClient.AddCardUsed(PlayerName, card.Id);
             ChangesRemaining--;
         }
 

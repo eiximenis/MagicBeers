@@ -1,5 +1,6 @@
 ﻿@page "/statistics"
 @using ApiClients;
+@using Components;
 @inject IStatisticsClient StatisticsClient;
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor ContextAccessor;
 
@@ -8,11 +9,31 @@
         Go to /login please
     </NotAuthorized>
     <Authorized>
-        <div class="row">
-            <div class="col-md-6 col-sm-12 p-4">
-                <RadzenChart>
-                    <RadzenPieSeries Data="@PieEntries" Title="Wins/Loses" CategoryProperty="Result" ValueProperty="Count" />
-                 </RadzenChart>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-sm-12 p-4">
+                    <RadzenChart>
+                        <RadzenPieSeries Data="@PieEntries" Title="Wins/Loses" CategoryProperty="Result" ValueProperty="Count" />
+                    </RadzenChart>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-sm-12 p-4">
+                    <h2>Your top 10 carts</h2>
+                    <table>
+                        <tr>
+                            <th>Card</th>
+                            <th>Usages</th>
+                        </tr>
+                        @foreach (var usage in TopCards)
+                        {
+                            <tr>
+                                <td>@CardsLib.CardsRepository.GetCardById(@usage.CardId).Name</td>
+                                <td>@usage.Usages</td>
+                            </tr>
+                        }
+                    </table>
+                </div>
             </div>
         </div>
     </Authorized>
@@ -29,9 +50,12 @@
 
     PieEntry[] PieEntries { get; set; }
 
+    IEnumerable<CardUsage> TopCards { get; set; }
+
     public Statistics()
     {
         PieEntries = new PieEntry[0];
+        TopCards = Enumerable.Empty<CardUsage>();
     }
 
 
@@ -45,7 +69,10 @@
             {
                 new PieEntry() {Count = stats.Loses, Result="Loses"},
                 new PieEntry() {Count = stats.Wins, Result="Wins"},
-                    };
+                                    };
+
+            TopCards = await StatisticsClient.GetCardUsages(ctx.User.Identity.Name);
+
         }
 
     }
