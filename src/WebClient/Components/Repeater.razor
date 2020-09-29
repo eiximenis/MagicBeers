@@ -1,0 +1,59 @@
+﻿@typeparam T
+
+@if (Items == null)
+{
+    @LoadingTemplate
+}
+else
+{
+    if (EmptyTemplate != null && !Items.Any())
+    {
+        @EmptyTemplate
+    }
+    else
+    {
+        @RepeaterContainerTemplate(
+            @: @{
+                var count = 0;
+                foreach (var item in Items) {
+                    if (count >0 && ItemSeparatorTemplate != null) 
+                    {
+                        @ItemSeparatorTemplate
+                                             
+                    }
+                    @ItemTemplate(new RepeaterItemHolder<T>(count, item));
+                    count++;
+                }
+            }
+        )
+    }
+}
+
+@code {
+    [Parameter]
+    public IEnumerable<T> Items { get; set; }
+
+    [Parameter]
+    public RenderFragment LoadingTemplate { get; set; }
+
+    [Parameter]
+    public RenderFragment<RenderFragment> RepeaterContainerTemplate { get; set; }
+
+    [Parameter]
+    public RenderFragment<RepeaterItemHolder<T>> ItemTemplate { get; set; }
+
+    [Parameter]
+    public RenderFragment ItemSeparatorTemplate { get; set; }
+
+    [Parameter]
+    public RenderFragment EmptyTemplate { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        // Create empty template in case the user doesn't provide it
+        if (RepeaterContainerTemplate == null)
+        {
+            RepeaterContainerTemplate = new RenderFragment<RenderFragment>(fragment => fragment);
+        }
+    }
+}

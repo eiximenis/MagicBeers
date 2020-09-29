@@ -1,0 +1,11 @@
+﻿<img src="images/card@(Card.Id).jpg" />
+<br />
+<strong>@Card.Name</strong>
+<br />
+@Card.Text
+<br />
+<strong>IBUS: </strong>@Card.Ibus
+@code {
+    [Parameter]
+    public CardsLib.Card Card { get; set; }
+}

@@ -1,0 +1,10 @@
+﻿@using CardsLib
+
+@if (Cards != null ) {
+    <h3>Total IBUs: @Engine.GetIbus(Cards)</h3>
+}
+
+@code {
+    [Parameter]
+    public IEnumerable<Card> Cards { get; set; }
+}

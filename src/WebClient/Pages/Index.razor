@@ -1,0 +1,15 @@
+@page "/"
+@using WebClient.Components
+<h1>Hello DotNet2020</h1>
+
+Welcome to <strong>Magic Beers</strong> a cards battle game, using... Beers!
+
+
+<AuthorizeView>
+    <NotAuthorized>
+        Go to /login please
+    </NotAuthorized>
+    <Authorized>
+        <MainContent></MainContent>
+    </Authorized>
+</AuthorizeView>

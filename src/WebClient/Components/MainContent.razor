@@ -1,0 +1,48 @@
+﻿<h3>MainContent</h3>
+
+<Repeater Items="@Hand">
+    <LoadingTemplate>
+        <p>Loading</p>
+    </LoadingTemplate>
+    <RepeaterContainerTemplate Context="ItemsContent">
+        <div class="container">
+            <div class="row">
+                @ItemsContent
+            </div>
+        </div>
+    </RepeaterContainerTemplate>
+
+    <ItemTemplate Context="entry">
+        <div class="col-sm">
+            <CardComponent Card="@entry.Item"></CardComponent>
+            <br />
+            <RadzenButton Click="@(async (args) => await ChangeCard(entry.Index))" Text="Change" Style="margin-bottom: 20px; width: 150px" Disabled="@(ChangesRemaining <= 0)" />
+        </div>
+    </ItemTemplate>
+</Repeater>
+
+<Total Cards="@Hand"></Total>
+
+<Result YourIbus="@YourIbus" RivalIbus="@RivalIbus" />
+
+<Repeater Items="@RivalHand">
+    <LoadingTemplate>
+        <p>Loading</p>
+    </LoadingTemplate>
+    <RepeaterContainerTemplate Context="ItemsContent">
+        <div class="container">
+            <div class="row">
+                @ItemsContent
+            </div>
+        </div>
+    </RepeaterContainerTemplate>
+
+    <ItemTemplate Context="entry">
+        <div class="col-sm">
+            <CardComponent Card="@entry.Item"></CardComponent>
+        </div>
+    </ItemTemplate>
+</Repeater>
+
+<RadzenButton Click="@(async (args) => await Challenge())" Text="Challenge!" Style="margin-bottom: 20px; width: 150px" />
+

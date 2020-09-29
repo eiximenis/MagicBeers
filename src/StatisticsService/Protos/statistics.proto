@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+option csharp_namespace = "StatisticsService";
+
+package statistics;
+
+service Statistics {
+	rpc GetLeaderboard(StatisticsRequest) returns (StatisticsResponse);
+	rpc GetPlayerStatistics(PlayerRequest) returns (StatisticsResponseItem);
+	rpc AddWin(PlayerRequest) returns (EmptyResponse);
+	rpc AddLose(PlayerRequest) returns (EmptyResponse);
+}	
+
+message EmptyResponse {}
+
+message PlayerRequest {
+	string player_name = 1;
+}
+
+message StatisticsRequest {
+	enum OrderBy {
+		WINS = 0;
+		LOSES = 1;
+		RATIO = 2;
+	}
+	int32 from = 1;
+	int32 to = 2;
+	OrderBy order = 3;
+}
+
+message StatisticsResponse {
+	int32 count = 1;
+	repeated StatisticsResponseItem items = 2;
+}
+
+ message StatisticsResponseItem {
+	string player_name = 1;
+	int32 wins = 2;
+	int32 loses = 3;
+	double ratio = 4;
+ }

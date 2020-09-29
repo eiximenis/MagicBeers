@@ -1,0 +1,52 @@
+﻿@page "/statistics"
+@using ApiClients;
+@inject IStatisticsClient StatisticsClient;
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor ContextAccessor;
+
+<AuthorizeView>
+    <NotAuthorized>
+        Go to /login please
+    </NotAuthorized>
+    <Authorized>
+        <div class="row">
+            <div class="col-md-6 col-sm-12 p-4">
+                <RadzenChart>
+                    <RadzenPieSeries Data="@PieEntries" Title="Wins/Loses" CategoryProperty="Result" ValueProperty="Count" />
+                 </RadzenChart>
+            </div>
+        </div>
+    </Authorized>
+</AuthorizeView>
+
+
+@code {
+
+    class PieEntry
+    {
+        public string Result { get; set; }
+        public int Count { get; set; }
+    }
+
+    PieEntry[] PieEntries { get; set; }
+
+    public Statistics()
+    {
+        PieEntries = new PieEntry[0];
+    }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var ctx = ContextAccessor.HttpContext;
+        if (ctx != null && ctx.User.Identity.IsAuthenticated)
+        {
+            var stats = await StatisticsClient.GetPlayerStats(ctx.User.Identity.Name);
+            PieEntries = new PieEntry[]
+            {
+                new PieEntry() {Count = stats.Loses, Result="Loses"},
+                new PieEntry() {Count = stats.Wins, Result="Wins"},
+                    };
+        }
+
+    }
+}

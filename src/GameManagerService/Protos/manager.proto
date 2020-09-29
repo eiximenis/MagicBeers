@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+option csharp_namespace = "GameManagerService";
+
+package manager;
+
+// The greeting service definition.
+service Manager {
+  // Sends a greeting
+  rpc GetInitialHand (InitialHandRequest) returns (InitialHandResponse);
+  rpc GetNewCard(InitialHandRequest) returns (CardInfo);
+}
+
+// The request message containing the user's name.
+message InitialHandRequest {
+  string player_name = 1;
+  string player_email = 2;
+  int32 max_card_id = 3;
+}
+
+// The response message containing the greetings.
+message InitialHandResponse {
+  repeated CardInfo cards = 1;
+}
+
+message CardInfo {
+	int32 card_id = 1;
+}

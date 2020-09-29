@@ -1,0 +1,17 @@
+﻿@page "/login"
+@model WebClient.Pages.LoginModel
+@Layout=""
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+
+<h3>Tell me who you are</h3>
+
+<form method="post" asp-page="Login">
+    Nick: <input asp-for="Name" />
+    <br />
+
+    Email: <input asp-for="Email" />
+    <br />
+
+    <input type="submit" />
+</form>

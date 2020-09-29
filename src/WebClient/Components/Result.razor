@@ -1,0 +1,27 @@
+﻿
+@if (RivalIbus != -1 && YourIbus != -1)
+{
+    <div class="row">
+        <div class="col-12">
+            @if (RivalIbus >= YourIbus)
+            {
+                <div class="alert-danger"><strong>YOU LOSE!</strong></div>
+            }
+            else
+            {
+                <div class="alert-success"><strong>YOU WIN!</strong></div>
+            }
+        </div>
+    </div>
+    <br />
+}
+
+
+
+@code {
+    [Parameter]
+    public int RivalIbus { get; set; }
+
+    [Parameter]
+    public int YourIbus { get; set; }
+}
