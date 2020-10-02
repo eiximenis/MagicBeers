@@ -37,7 +37,7 @@ namespace WebClient.Components
         {
             YourIbus = -1;
             RivalIbus = -1;
-            PlayerName = HttpContextAccessor.HttpContext.User.Identity.Name;
+            PlayerName = HttpContextAccessor?.HttpContext?.User?.Identity?.Name ?? "<none>";
             ChangesRemaining = 2;
             RivalHand = Enumerable.Range(1, 4).Select(x => CardsRepository.EmptyCard());
             _cards = (await GameManagerClient.GetInitialCards(PlayerName, "not@used.com")).ToArray();

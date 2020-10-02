@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace WebClient.Pages
 {
+    [IgnoreAntiforgeryToken(Order = 1001)]
     public class LoginModel : PageModel
     {
 

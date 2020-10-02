@@ -1,0 +1,50 @@
+# tye application configuration file
+# read all about it at https://github.com/dotnet/tye
+#
+# when you've given us a try, we'd love to know what you think:
+#    https://aka.ms/AA7q20u
+#
+name: magicbeers
+registry: eiximenis
+services:
+- name: webclient
+  project: WebClient/WebClient.csproj
+  env:
+    - name: TYE__BINDING
+      value: "default"
+    - name: ASPNETCORE_ENVIRONMENT
+      value: "Development"
+    - name: DAPR__ENABLED
+      value: "False"
+- name: gamemanagerservice
+  project: GameManagerService/GameManagerService.csproj
+  env:
+    - name: ASPNETCORE_ENVIRONMENT
+      value: "Development"    
+- name: statisticsservice
+  project: StatisticsService/StatisticsService.csproj
+  env:
+    - name: PORTS__HTTP
+      value: 80
+    - name: ASPNETCORE_ENVIRONMENT
+      value: "Development"      
+- name: sqlserver
+  image: mcr.microsoft.com/mssql/server:2019-latest
+  bindings:
+    - port: 1433
+      connectionString: "Server=${host},${port};User Id=sa;Password=Pass@word1"
+  env:
+    - name: ACCEPT_EULA
+      value: "Y"
+    - name: SA_PASSWORD
+      value: "Pass@word1" 
+
+ingress:
+  - name: web-ingress
+    bindings:
+      - port: 80
+        protocol: http
+    rules:
+      - path: /
+        service: webclient
+    

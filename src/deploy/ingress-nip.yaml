@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: traefik
+  labels:
+    app.kubernetes.io/part-of: magicbeers
+  name: webclient-nip
+  namespace: default
+spec:
+  rules:
+  - host: 52.233.254.141.nip.io
+    http:
+      paths:
+      - backend:
+          serviceName: webclient
+          servicePort: 80
+        path: /

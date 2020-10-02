@@ -1,16 +1,26 @@
 ﻿@page "/login"
 @model WebClient.Pages.LoginModel
-@Layout=""
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<html>
+<head>
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+    <link href="css/site.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="main">
+        <div class="top-row px-4">
+        </div>
 
-<h3>Tell me who you are</h3>
-
-<form method="post" asp-page="Login">
-    Nick: <input asp-for="Name" />
-    <br />
-
-    Email: <input asp-for="Email" />
-    <br />
-
-    <input type="submit" />
-</form>
+        <h3>Tell me who you are</h3>
+        <div class="content px-4">
+            <form method="post" asp-page="Login" asp-antiforgery="false" >
+                    Nick: <input asp-for="Name" />
+                    <p />
+                    Email: <input asp-for="Email" />
+                    <p />
+                <input type="submit" />
+            </form>
+        </div>
+    </div>
+</body>
+</html>

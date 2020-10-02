@@ -16,7 +16,7 @@
         <div class="col-sm">
             <CardComponent Card="@entry.Item"></CardComponent>
             <br />
-            <RadzenButton Click="@(async (args) => await ChangeCard(entry.Index))" Text="Change" Style="margin-bottom: 20px; width: 150px" Disabled="@(ChangesRemaining <= 0)" />
+            <RadzenButton Click="@(async (args) => await ChangeCard(entry.Index))" Text="Change" Style="margin-bottom: 20px; width: 150px" Disabled="@(ChangesRemaining <= 0 || entry.Item.Style != CardsLib.BeerStyle.Effect)" />
         </div>
     </ItemTemplate>
 </Repeater>

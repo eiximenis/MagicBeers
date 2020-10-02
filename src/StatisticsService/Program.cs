@@ -40,11 +40,11 @@ namespace StatisticsService
 
                         Console.WriteLine($">>>>> HTTP PORT: {httpPort}, HTTPS PORT: {httpsPort}");
 
-                        if (httpsPort != -1)
+                        if (httpPort != -1)
                         {
                             options.ListenAnyIP(httpPort, lo =>
                             {
-                                lo.Protocols = HttpProtocols.Http1AndHttp2;
+                                lo.Protocols = httpsPort != -1 ? HttpProtocols.Http1AndHttp2 : HttpProtocols.Http2;
                             });
                         }
                         if (httpsPort != -1)
@@ -70,18 +70,30 @@ namespace StatisticsService
                 var httpsPort = -1;
                 foreach (var url in urls)
                 {
-                    var uri = new Uri(url);
-                    if (uri.Scheme == "http") httpPort = uri.Port;
-                    else if (uri.Scheme == "https") httpsPort = uri.Port;
+                    try
+                    {
+                        var uri = new Uri(url);
+                        if (uri.Scheme == "http") httpPort = uri.Port;
+                        else if (uri.Scheme == "https") httpsPort = uri.Port;
+                    }
+                    catch (Exception) { }
                 }
-                return (httpPort, httpsPort);
+
+                if (httpPort != -1 || httpsPort != -1)
+                {
+                    return (httpPort, httpPort);
+                }
             }
-            else
-            {
-                var httpPort = int.TryParse(startupConf["Ports:http"], out var hp) ? hp : -1;
-                var httpsPort = int.TryParse(startupConf["Ports:http"], out var hps) ? hps : -1;
-                return (httpPort, httpsPort);
-            }
+
+            return GetCustomConfigPorts(startupConf);
+
+        }
+
+        private static (int http, int https) GetCustomConfigPorts(IConfiguration startupConf)
+        {
+            var httpPort = int.TryParse(startupConf["Ports:http"], out var hp) ? hp : -1;
+            var httpsPort = int.TryParse(startupConf["Ports:https"], out var hps) ? hps : -1;
+            return (httpPort, httpsPort);
         }
     }
 }
